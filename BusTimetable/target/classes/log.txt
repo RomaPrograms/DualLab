@@ -1,0 +1,2 @@
+2019-07-27 16:34:53,718 DEBUG [main] Main (Main.java:23) - Calculation of timetable started.
+2019-07-27 16:34:53,730 DEBUG [main] Main (Main.java:38) - Calculation of timetable ended.
