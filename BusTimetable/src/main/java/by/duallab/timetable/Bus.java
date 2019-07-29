@@ -1,6 +1,14 @@
+package by.duallab.timetable;
+
 import java.time.LocalTime;
 import java.util.Objects;
 
+/**
+ * Entity class with characteristics of bus.
+ *
+ * @author Roman
+ * @version 1.0
+ */
 public class Bus {
     private LocalTime departureTime;
     private LocalTime arrivalTime;
