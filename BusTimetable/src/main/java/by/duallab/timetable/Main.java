@@ -73,7 +73,7 @@ public class Main {
                 }
                 indexList.clear();
             } else {
-                if (!isEqual) {
+                if (isEqual) {
                     bestBuses.add(buses.get(i));
                 }
             }
@@ -95,7 +95,7 @@ public class Main {
                                        final List<Bus> buses,
                                        final int i,
                                        final List<Integer> indexList) {
-        boolean isAppropriate = false;
+        boolean isAppropriate = true;
         for (int j = 0; j < bestBuses.size(); j++) {
             if (buses.get(i).getDepartureTime().equals(bestBuses.get(j).getDepartureTime())
                     && buses.get(i).getArrivalTime().isBefore(bestBuses.get(j).getArrivalTime())) {
@@ -113,7 +113,7 @@ public class Main {
                                 || buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())
                                 || (buses.get(i).getDepartureTime().isBefore(bestBuses.get(j).getDepartureTime())
                                 && buses.get(i).getArrivalTime().isAfter(bestBuses.get(j).getArrivalTime()))) {
-                            isAppropriate = true;
+                            isAppropriate = false;
                         }
                     }
                 }
