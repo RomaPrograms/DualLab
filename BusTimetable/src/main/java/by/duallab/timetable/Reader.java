@@ -40,6 +40,13 @@ public class Reader {
      */
     private static final String INCORRECT_FILE =
             "File can not be closed.";
+
+    /**
+     * Message before stack trace.
+     */
+    private static final String STACK_TRACE =
+            " Stack trace: ";
+
     /**
      * List with buses from file.
      */
@@ -65,10 +72,10 @@ public class Reader {
             }
             LOGGER.debug("Reading ended correctly.");
         } catch (FileNotFoundException ex) {
-            LOGGER.error(FILE_NOT_FOUND + " Stack trace: "
+            LOGGER.error(FILE_NOT_FOUND + STACK_TRACE
                     + Arrays.toString(ex.getStackTrace()));
         } catch (IOException ex) {
-            LOGGER.error(INCORRECT_DATA + " Stack trace: "
+            LOGGER.error(INCORRECT_DATA + STACK_TRACE
                     + Arrays.toString(ex.getStackTrace()));
         } finally {
             try {
@@ -76,7 +83,7 @@ public class Reader {
                     bufferedReader.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(INCORRECT_FILE + " Stack trace: "
+                LOGGER.error(INCORRECT_FILE + STACK_TRACE
                         + Arrays.toString(e.getStackTrace()));
             }
         }
