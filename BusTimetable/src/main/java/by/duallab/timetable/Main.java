@@ -46,7 +46,7 @@ public class Main {
     }
 
     /**
-     * Sorts all buses by name in reverse and by departure time in ascending
+     * Sorts all buses by name in reverse and by departure time in ascending.
      *
      * @param buses - list with buses
      * @return sorted list with buses
@@ -79,6 +79,7 @@ public class Main {
      * Determines correct buses for timetable.
      *
      * @param buses - list with incorrect buses
+     * @return list with corrected buses for timetable
      */
     private static List<Bus> creatingCorrectTimetable(
             final List<Bus> buses) {

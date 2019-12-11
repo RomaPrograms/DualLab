@@ -3,3 +3,5 @@
 .idea/
 out/
 *.jar
+.target/
+*.d.txt
