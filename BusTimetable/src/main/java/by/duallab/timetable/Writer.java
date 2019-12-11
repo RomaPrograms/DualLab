@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,7 +47,8 @@ public class Writer {
             LOGGER.debug("Writing ended correctly.");
             fileWriter.flush();
         } catch (IOException e) {
-            LOGGER.error(INCORRECT_FILE);
+            LOGGER.error(INCORRECT_FILE + " Stack trace: "
+                    + Arrays.toString(e.getStackTrace()));
         }
 
     }

@@ -4,7 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * by.duallab.timetable.Main class for execution program.
@@ -33,43 +36,66 @@ public class Main {
         Writer writer = new Writer();
         List<Bus> buses = reader.read(args[0]);
 
-        List<Bus> bestBuses = new ArrayList<>();
-        bestBuses.add(buses.get(0));
+        buses = deleteAllServicesLongerThanHour(buses);
 
-        creatingCorrectTimetable(bestBuses, buses);
+        List<Bus> bestBuses = creatingCorrectTimetable(buses);
 
-        bestBuses.sort((o1, o2) -> {
-            if (o1.getNameOfBus().compareTo(o2.getNameOfBus()) < 0) {
-                return 1;
-            }
-
-            if (o1.getNameOfBus().compareTo(o2.getNameOfBus()) > 0) {
-                return -1;
-            }
-
-            return o1.getArrivalTime().compareTo(o2.getArrivalTime());
-        });
+        bestBuses = sortBusesByNameOfBusesAndDepartureTime(bestBuses);
 
         writer.write(PATH_TO_OUTPUT_FILE, bestBuses);
     }
 
     /**
+     * Sorts all buses by name in reverse and by departure time in ascending
+     *
+     * @param buses - list with buses
+     * @return sorted list with buses
+     */
+    private static List<Bus> sortBusesByNameOfBusesAndDepartureTime(
+            final List<Bus> buses) {
+        return buses.stream()
+                .sorted(Comparator.comparing(Bus::getNameOfBus).reversed()
+                        .thenComparing(Bus::getDepartureTime))
+                .collect(toList());
+    }
+
+    /**
+     * Deletes all buses which service longer than hour.
+     *
+     * @param buses - list with buses
+     * @return correct list with buses
+     */
+    private static List<Bus> deleteAllServicesLongerThanHour(
+            final List<Bus> buses) {
+        return buses.stream()
+                .filter(
+                        b1 -> ((b1.getArrivalTime().getHour() - b1.getDepartureTime().getHour() < 1)
+                                || (b1.getArrivalTime().getHour() - b1.getDepartureTime().getHour() == 1
+                                && b1.getArrivalTime().getMinute() <= b1.getDepartureTime().getMinute())))
+                .collect(toList());
+    }
+
+    /**
      * Determines correct buses for timetable.
      *
-     * @param bestBuses - list with correct buses
-     * @param buses     - list with incorrect buses
+     * @param buses - list with incorrect buses
      */
-    public static void creatingCorrectTimetable(final List<Bus> bestBuses,
-                                                 final List<Bus> buses) {
+    private static List<Bus> creatingCorrectTimetable(
+            final List<Bus> buses) {
         List<Integer> indexList = new ArrayList<>();
+        List<Bus> bestBuses = new ArrayList<>();
+        bestBuses.add(buses.get(0));
         LOGGER.debug("Calculation of timetable started.");
         boolean isEqual;
         for (int i = 1; i < buses.size(); i++) {
             isEqual = calculation(bestBuses, buses, i, indexList);
 
             if (!indexList.isEmpty()) {
-                for (int k : indexList) {
-                    bestBuses.set(k, buses.get(i));
+                bestBuses.set(indexList.get(0), buses.get(i));
+                int numberOfDeletedBuses = 0;
+                for (int j = 1; j < indexList.size(); j++) {
+                    bestBuses.remove(indexList.get(j) - numberOfDeletedBuses);
+                    numberOfDeletedBuses++;
                 }
                 indexList.clear();
             } else {
@@ -79,6 +105,7 @@ public class Main {
             }
         }
         LOGGER.debug("Calculation of timetable ended.");
+        return bestBuses;
     }
 
     /**
@@ -100,23 +127,25 @@ public class Main {
             if (buses.get(i).getDepartureTime().equals(bestBuses.get(j).getDepartureTime())
                     && buses.get(i).getArrivalTime().isBefore(bestBuses.get(j).getArrivalTime())) {
                 indexList.add(j);
-            } else {
-                if (buses.get(i).getDepartureTime().isAfter(bestBuses.get(j).getDepartureTime())
-                        && buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())) {
+            } else if (buses.get(i).getDepartureTime().isAfter(bestBuses.get(j).getDepartureTime())
+                    && buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())) {
+                indexList.add(j);
+            } else if (buses.get(i).getDepartureTime().isAfter(bestBuses.get(j).getDepartureTime())
+                    && buses.get(i).getArrivalTime().isBefore(bestBuses.get(j).getArrivalTime())) {
+                indexList.add(j);
+            } else if (buses.get(i).getDepartureTime().equals(bestBuses.get(j).getDepartureTime())
+                    && buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())) {
+                if (buses.get(i).getNameOfBus().equals("Posh")
+                        && bestBuses.get(j).getNameOfBus().equals("Grotty")) {
                     indexList.add(j);
                 } else {
-                    if (buses.get(i).getDepartureTime().isAfter(bestBuses.get(j).getDepartureTime())
-                            && buses.get(i).getArrivalTime().isBefore(bestBuses.get(j).getArrivalTime())) {
-                        indexList.add(j);
-                    } else {
-                        if (buses.get(i).getDepartureTime().equals(bestBuses.get(j).getDepartureTime())
-                                || buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())
-                                || (buses.get(i).getDepartureTime().isBefore(bestBuses.get(j).getDepartureTime())
-                                && buses.get(i).getArrivalTime().isAfter(bestBuses.get(j).getArrivalTime()))) {
-                            isAppropriate = false;
-                        }
-                    }
+                    isAppropriate = false;
                 }
+            } else if (buses.get(i).getDepartureTime().equals(bestBuses.get(j).getDepartureTime())
+                    || buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())
+                    || (buses.get(i).getDepartureTime().isBefore(bestBuses.get(j).getDepartureTime())
+                    && buses.get(i).getArrivalTime().isAfter(bestBuses.get(j).getArrivalTime()))) {
+                isAppropriate = false;
             }
         }
 

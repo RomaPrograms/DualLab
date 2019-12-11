@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -64,16 +65,19 @@ public class Reader {
             }
             LOGGER.debug("Reading ended correctly.");
         } catch (FileNotFoundException ex) {
-            LOGGER.error(FILE_NOT_FOUND);
+            LOGGER.error(FILE_NOT_FOUND + " Stack trace: "
+                    + Arrays.toString(ex.getStackTrace()));
         } catch (IOException ex) {
-            LOGGER.error(INCORRECT_DATA);
+            LOGGER.error(INCORRECT_DATA + " Stack trace: "
+                    + Arrays.toString(ex.getStackTrace()));
         } finally {
             try {
                 if (bufferedReader != null) {
                     bufferedReader.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(INCORRECT_FILE);
+                LOGGER.error(INCORRECT_FILE + " Stack trace: "
+                        + Arrays.toString(e.getStackTrace()));
             }
         }
 
@@ -88,15 +92,11 @@ public class Reader {
      */
     private Bus parseString(final String string) {
         StringTokenizer stringTokenizer
-                = new StringTokenizer(string, " :");
+                = new StringTokenizer(string, " ");
         Bus bus = new Bus();
         bus.setNameOfBus(stringTokenizer.nextToken());
-        bus.setDepartureTime(LocalTime.of(
-                Integer.parseInt(stringTokenizer.nextToken()),
-                Integer.parseInt(stringTokenizer.nextToken())));
-        bus.setArrivalTime(LocalTime.of(
-                Integer.parseInt(stringTokenizer.nextToken()),
-                Integer.parseInt(stringTokenizer.nextToken())));
+        bus.setDepartureTime(LocalTime.parse(stringTokenizer.nextToken()));
+        bus.setArrivalTime(LocalTime.parse(stringTokenizer.nextToken()));
         return bus;
 
     }
