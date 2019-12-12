@@ -70,7 +70,8 @@ public class Main {
         return buses.stream()
                 .filter(
                         b1 -> ((b1.getArrivalTime().getHour() - b1.getDepartureTime().getHour() < 1)
-                                || (b1.getArrivalTime().getHour() - b1.getDepartureTime().getHour() == 1
+                                || ((b1.getArrivalTime().getHour() - b1.getDepartureTime().getHour() == 1
+                                || b1.getArrivalTime().getHour() - b1.getDepartureTime().getHour() == -23)
                                 && b1.getArrivalTime().getMinute() <= b1.getDepartureTime().getMinute())))
                 .collect(toList());
     }
