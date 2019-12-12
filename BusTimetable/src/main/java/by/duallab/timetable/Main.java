@@ -65,7 +65,7 @@ public class Main {
      * @param buses - list with buses
      * @return correct list with buses
      */
-    private static List<Bus> deleteAllServicesLongerThanHour(
+    private static List<Bus> deleteAllServicesLongerThanHour( /*add working with halfmoon*/
             final List<Bus> buses) {
         return buses.stream()
                 .filter(
@@ -126,13 +126,27 @@ public class Main {
         boolean isAppropriate = true;
         for (int j = 0; j < bestBuses.size(); j++) {
             if (buses.get(i).getDepartureTime().equals(bestBuses.get(j).getDepartureTime())
-                    && buses.get(i).getArrivalTime().isBefore(bestBuses.get(j).getArrivalTime())) {
+                    && ((buses.get(i).getArrivalTime().isBefore(bestBuses.get(j).getArrivalTime())
+                    && ((bestBuses.get(j).getArrivalTime().getHour() != 0 && buses.get(i).getArrivalTime().getHour() != 0)
+                    || (bestBuses.get(j).getArrivalTime().getHour() == 0 && buses.get(i).getArrivalTime().getHour() == 0)))
+                    || (buses.get(i).getArrivalTime().getHour() != 0 && bestBuses.get(j).getArrivalTime().getHour() == 0))) {
                 indexList.add(j);
             } else if (buses.get(i).getDepartureTime().isAfter(bestBuses.get(j).getDepartureTime())
-                    && buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())) {
+                    && ((buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())
+                    && ((bestBuses.get(j).getDepartureTime().getHour() != 0 && buses.get(i).getDepartureTime().getHour() != 0)
+                    || (bestBuses.get(j).getDepartureTime().getHour() == 0 && buses.get(i).getDepartureTime().getHour() == 0)))
+                    || (buses.get(i).getDepartureTime().getHour() == 0 && bestBuses.get(j).getDepartureTime().getHour() != 0))) {
                 indexList.add(j);
-            } else if (buses.get(i).getDepartureTime().isAfter(bestBuses.get(j).getDepartureTime())
-                    && buses.get(i).getArrivalTime().isBefore(bestBuses.get(j).getArrivalTime())) {
+            } else if ((buses.get(i).getDepartureTime().isAfter(bestBuses.get(j).getDepartureTime())
+                    && buses.get(i).getArrivalTime().isBefore(bestBuses.get(j).getArrivalTime())
+                    && ((buses.get(i).getDepartureTime().getHour() == 23
+                    && bestBuses.get(j).getDepartureTime().getHour() == 23
+                    && bestBuses.get(j).getArrivalTime().getHour() == 0)
+                    || (buses.get(i).getDepartureTime().getHour() != 23
+                    && bestBuses.get(j).getDepartureTime().getHour() != 23)))
+                    || (buses.get(i).getDepartureTime().isAfter(bestBuses.get(j).getDepartureTime())
+                    && buses.get(i).getArrivalTime().isAfter(bestBuses.get(j).getArrivalTime())
+                    && bestBuses.get(j).getArrivalTime().getHour() == 0)) {
                 indexList.add(j);
             } else if (buses.get(i).getDepartureTime().equals(bestBuses.get(j).getDepartureTime())
                     && buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())) {
@@ -145,7 +159,8 @@ public class Main {
             } else if (buses.get(i).getDepartureTime().equals(bestBuses.get(j).getDepartureTime())
                     || buses.get(i).getArrivalTime().equals(bestBuses.get(j).getArrivalTime())
                     || (buses.get(i).getDepartureTime().isBefore(bestBuses.get(j).getDepartureTime())
-                    && buses.get(i).getArrivalTime().isAfter(bestBuses.get(j).getArrivalTime()))) {
+                    && buses.get(i).getArrivalTime().isAfter(bestBuses.get(j).getArrivalTime())
+                    && bestBuses.get(j).getDepartureTime().getHour() != 23)) {
                 isAppropriate = false;
             }
         }

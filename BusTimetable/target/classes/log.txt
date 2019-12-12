@@ -1,6 +1,6 @@
-2019-12-11 23:32:31,004 DEBUG [main] timetable.Reader (Reader.java:58) - Reading started.
-2019-12-11 23:32:31,026 DEBUG [main] timetable.Reader (Reader.java:65) - Reading ended correctly.
-2019-12-11 23:32:31,032 DEBUG [main] timetable.Main (Main.java:88) - Calculation of timetable started.
-2019-12-11 23:32:31,033 DEBUG [main] timetable.Main (Main.java:107) - Calculation of timetable ended.
-2019-12-11 23:32:31,039 DEBUG [main] timetable.Writer (Writer.java:38) - Writing started.
-2019-12-11 23:32:31,039 DEBUG [main] timetable.Writer (Writer.java:46) - Writing ended correctly.
+2019-12-12 12:03:12,657 DEBUG [main] timetable.Reader (Reader.java:66) - Reading started.
+2019-12-12 12:03:12,680 DEBUG [main] timetable.Reader (Reader.java:73) - Reading ended correctly.
+2019-12-12 12:03:12,687 DEBUG [main] timetable.Main (Main.java:89) - Calculation of timetable started.
+2019-12-12 12:03:12,687 DEBUG [main] timetable.Main (Main.java:108) - Calculation of timetable ended.
+2019-12-12 12:03:12,689 DEBUG [main] timetable.Writer (Writer.java:39) - Writing started.
+2019-12-12 12:03:12,690 DEBUG [main] timetable.Writer (Writer.java:47) - Writing ended correctly.
